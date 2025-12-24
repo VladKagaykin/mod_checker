@@ -10,8 +10,8 @@
   "icon": "src/main/resources/assets/modid/icon.png",
   "environment": "*",
   "entrypoints": {
-    "main": ["net.fabricmc.AVCD.modcheck.ModCheck"],
-    "client": ["net.fabricmc.AVCD.modcheck.client.ModCheckClient"]
+    "main": ["net.fabricmc.example.modcheck.ModCheck"],
+    "client": ["net.fabricmc.example.modcheck.client.ModCheckClient"]
   },
   "mixins": [],
   "depends": {
