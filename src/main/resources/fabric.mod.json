@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "modcheck",
+  "version": "1.0.0",
+  "name": "Mod Checker",
+  "description": "Player mod validation system",
+  "authors": ["AVCD"],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/modcheck/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["net.fabricmc.AVCD.modcheck.ModCheck"],
+    "client": ["net.fabricmc.AVCD.modcheck.client.ModCheckClient"]
+  },
+  "mixins": [
+    "modcheck.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.21",
+    "minecraft": "~1.19.4",
+    "java": ">=17",
+    "fabric-api": "*"
+  }
+}
