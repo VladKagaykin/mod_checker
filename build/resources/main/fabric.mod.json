@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "modcheck",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "name": "Mod Checker",
   "description": "Player mod validation system",
   "authors": ["AVCD"],
@@ -13,9 +13,6 @@
     "main": ["net.fabricmc.AVCD.modcheck.ModCheck"],
     "client": ["net.fabricmc.AVCD.modcheck.client.ModCheckClient"]
   },
-  "mixins": [
-    "modcheck.mixins.json"
-  ],
   "depends": {
     "fabricloader": ">=0.14.21",
     "minecraft": "~1.19.4",
