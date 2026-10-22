@@ -28,6 +28,6 @@ public class ModCheckClient implements ClientModInitializer {
         LOGGER.info("Sending mod list to server ({} mods)", modList.length);
         
         // Send packet to server
-        sender.sendPacket(ModListPacket.MOD_LIST_PACKET, ModListPacket.createPacket(modList));
+        sender.sendPacket(new ModListPacket(modList));
     }
 }

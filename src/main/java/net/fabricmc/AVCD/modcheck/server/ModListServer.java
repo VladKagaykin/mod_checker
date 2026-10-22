@@ -5,8 +5,6 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.network.ClientConnection;
-import java.lang.reflect.Field;
 import java.util.*;
 
 public class ModListServer {
@@ -15,18 +13,12 @@ public class ModListServer {
     private static final Map<UUID, String> playerLocales = new HashMap<>();
     private static final long TIMEOUT_TICKS = 100L; // 5 секунд (20 тиков/сек)
     
-    // Кэш для reflection чтобы не делать его каждый раз
-    private static Field connectionField = null;
-    private static Field localeField = null;
-    private static boolean reflectionInitialized = false;
-    
     // Английские сообщения по умолчанию
     private static final Map<String, String> ENGLISH_MESSAGES = new HashMap<>();
     private static final Map<String, String> RUSSIAN_MESSAGES = new HashMap<>();
     
     static {
         initializeMessages();
-        initializeReflection();
     }
     
     private static void initializeMessages() {
@@ -83,28 +75,6 @@ public class ModListServer {
         
         RUSSIAN_MESSAGES.put("success.all_mods_checked", 
             "§a[ModCheck] ✓ Все моды проверены");
-    }
-    
-    private static void initializeReflection() {
-        if (reflectionInitialized) return;
-        
-        try {
-            // Инициализируем reflection поля один раз
-            connectionField = Class.forName("net.minecraft.server.network.ServerPlayNetworkHandler")
-                .getDeclaredField("connection");
-            connectionField.setAccessible(true);
-            
-            localeField = Class.forName("net.minecraft.network.ClientConnection")
-                .getDeclaredField("locale");
-            localeField.setAccessible(true);
-            
-            reflectionInitialized = true;
-            System.out.println("[ModCheck] Reflection initialized successfully");
-            
-        } catch (Exception e) {
-            System.err.println("[ModCheck] Failed to initialize reflection: " + e.getMessage());
-            reflectionInitialized = false;
-        }
     }
     
     public static void initialize() {
@@ -204,18 +174,11 @@ public class ModListServer {
         String locale = "en_us"; // Значение по умолчанию
         
         try {
-            // Используем reflection для получения локали из ClientConnection
-            if (reflectionInitialized && connectionField != null && localeField != null) {
-                Object connection = connectionField.get(player.networkHandler);
-                if (connection != null) {
-                    Object localeObj = localeField.get(connection);
-                    if (localeObj instanceof String) {
-                        locale = ((String) localeObj).toLowerCase();
-                    }
-                }
+            if (player.getClientOptions() != null && player.getClientOptions().language() != null) {
+                locale = player.getClientOptions().language().toLowerCase();
             }
         } catch (Exception e) {
-            System.err.println("[ModCheck] Error getting locale via reflection: " + e.getMessage());
+            System.err.println("[ModCheck] Error getting player locale: " + e.getMessage());
         }
         
         // Сохраняем локаль в кэш
